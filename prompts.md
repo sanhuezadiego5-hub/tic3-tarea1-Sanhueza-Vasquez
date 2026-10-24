@@ -987,3 +987,463 @@ Texto original:
 ````text
 Solo esta conversación
 ````
+
+## Actualización del 21 de octubre de 2026
+
+Se incorporan P059–P089: mensajes del 13 al 21 de octubre de 2026 sobre muestreo, almacenamiento binario, despliegue, Wireshark, informe y anexo. Fechas y modelo verificados en el historial local. En mensajes con adjuntos se conserva el texto de la solicitud y se relacionan los archivos por separado; no se transcriben envoltorios automáticos de la aplicación ni datos de imagen. Las respuestas a preguntas se presentan con la pregunta como contexto, como en P058. Los resultados son notas posteriores de trazabilidad, no parte de los prompts originales. Las explicaciones históricas describen la versión existente cuando se respondieron; los cambios posteriores no se reescriben retroactivamente.
+
+## P059 — BMI270 / rango y frecuencia de muestreo
+
+- Registro UTC: 2026-10-13T19:06:49.883Z.
+- Herramienta/modelo: Codex / `gpt-6.1-sol` (metadatos de ejecución).
+- Resultado: Se explicó el rango en g, la saturación y las tasas disponibles del acelerómetro, giroscopio y temperatura con apoyo del datasheet.
+- Uso: Respuesta técnica; no generó cambios de código.
+- Integridad: texto original sin correcciones; se conservan erratas, denominaciones y repeticiones.
+
+Texto original:
+
+````text
+Explícame que es el rango de aceleración g en palabras simples y basado en el datasheet del sensor bmi270, dime la frecuencia a la cual muestrea este sensor cada parámetro
+````
+
+## P060 — Adquisición / muestreo y empaquetación
+
+- Registro UTC: 2026-10-13T19:10:08.402Z.
+- Herramienta/modelo: Codex / `gpt-6.1-sol` (metadatos de ejecución).
+- Resultado: Se distinguieron conversión del sensor, lectura FIFO, cierre de arreglos y transmisión por red.
+- Uso: Respuesta explicativa; no modificó el firmware.
+- Integridad: texto original sin correcciones; se conservan erratas, denominaciones y repeticiones.
+
+Texto original:
+
+````text
+Si esa es la frecuencia en que el sensor mide ¿Cuál es la frecuencia de envío de datos o de empaquetación en arreglos?
+````
+
+## P061 — Configuración predeterminada / saturación
+
+- Registro UTC: 2026-10-13T19:12:51.129Z.
+- Herramienta/modelo: Codex / `gpt-6.1-sol` (metadatos de ejecución).
+- Resultado: Se verificaron valores iniciales de 400/400 Hz, ventana de 1000 ms y el efecto de exceder el rango de aceleración.
+- Uso: Explicación basada en código; no se cambió la configuración por este prompt.
+- Integridad: texto original sin correcciones; se conservan erratas, denominaciones y repeticiones.
+
+Texto original:
+
+````text
+¿En el caso de mi código cuáles son las frecuencias de envío forma predeterminada? ¿Si yo tengo un rango de g pequeño pero mido una aceleración muy grande que pasará o que desplegará el sensor?
+````
+
+## P062 — FIFO / frecuencias de lectura y envío
+
+- Registro UTC: 2026-10-13T19:21:40.517Z.
+- Herramienta/modelo: Codex / `gpt-6.1-sol` (metadatos de ejecución).
+- Resultado: Se identificó el sondeo nominal FIFO de 10 ms y se relacionó con cuatro XYZ por flujo a 400 Hz y arreglos de un segundo.
+- Uso: Respuesta explicativa; sin código nuevo.
+- Integridad: texto original sin correcciones; se conservan erratas, denominaciones y repeticiones.
+
+Texto original:
+
+````text
+¿Y en mi código con que frecuencia la esp lee la FIFO? Y entonces a 400hz para ambas frecuencias de muestreo ¿cuánto sería la frecuencia de envío?
+````
+
+## P063 — Arreglos / ventanas de un segundo
+
+- Registro UTC: 2026-10-13T19:24:02.313Z.
+- Herramienta/modelo: Codex / `gpt-6.1-sol` (metadatos de ejecución).
+- Resultado: Se aclaró que cada flujo cierra aproximadamente un arreglo por segundo y que el transporte fragmenta el bloque.
+- Uso: Respuesta explicativa; sin cambios de código.
+- Integridad: texto original sin correcciones; se conservan erratas, denominaciones y repeticiones.
+
+Texto original:
+
+````text
+¿Pero se empaqueta un arreglo y se envía también cada 1 segundo entonces?
+````
+
+## P064 — Temporización / control y GUI
+
+- Registro UTC: 2026-10-13T19:31:45.725Z.
+- Herramienta/modelo: Codex / `gpt-6.1-sol` (metadatos de ejecución).
+- Resultado: Se explicó interval_ms, consumo de colas, espera de ACK, retardo de control de 100 ms y consulta HTTP de 200 ms.
+- Uso: Explicación del comportamiento implementado; sin código nuevo.
+- Integridad: texto original sin correcciones; se conservan erratas, denominaciones y repeticiones.
+
+Texto original:
+
+````text
+Explícame que quiere decir esto: El cierre de ventana ocurre al superar interval_ms. La salida consume bloques disponibles y puede tardar o esperar ACK. El control intercambia estado con un retardo nominal de 100 ms. El navegador consulta HTTP cada 200 ms.
+````
+
+## P065 — Ventanas / confirmación ACK
+
+- Registro UTC: 2026-10-13T19:43:21.641Z.
+- Herramienta/modelo: Codex / `gpt-6.1-sol` (metadatos de ejecución).
+- Resultado: Se explicó cómo la ventana agrupa XYZ y se distinguió la confirmación de transporte de la confirmación de guardado.
+- Uso: Respuesta explicativa; sin cambios de código.
+- Integridad: texto original sin correcciones; se conservan erratas, denominaciones y repeticiones.
+
+Texto original:
+
+````text
+¿La ventana es el tiempo que yo establezco para que se complete un arreglo? Explícame que es un ACK
+````
+
+## P066 — ESP-IDF / directorios de compilación
+
+- Registro UTC: 2026-10-13T19:57:19.466Z.
+- Herramienta/modelo: Codex / `gpt-6.1-sol` (metadatos de ejecución).
+- Resultado: Se identificaron build y build-tic3 como directorios de salida de compilaciones del mismo proyecto.
+- Uso: Diagnóstico explicativo; no se eliminaron builds mediante este prompt.
+- Integridad: texto original sin correcciones; se conservan erratas, denominaciones y repeticiones.
+
+Texto original:
+
+````text
+¿Por qué en mi carpeta del proyecto tengo dos carpetas build, una llamada build y otra build-tic3?
+````
+
+## P067 — Serialización / binario y JSON
+
+- Registro UTC: 2026-10-18T22:06:38.699Z.
+- Herramienta/modelo: Codex / `gpt-6.1-sol` (metadatos de ejecución).
+- Resultado: Se verificó que el envío binario no está encapsulado en JSON y que el receptor de esa versión convertía las muestras a JSON al guardarlas.
+- Uso: Revisión explicativa; describe la versión previa a la actualización de almacenamiento de P070–P072.
+- Integridad: texto original sin correcciones; se conservan erratas, denominaciones y repeticiones.
+
+Texto original:
+
+````text
+¿El envío en binario es realmente en binario? Con enviar en binario me refiero a mandar el mensaje sin necesidad de usar un json. Ahora mismo ese mensaje en binario, lo que eestá en binario es su contenido, pero este estpa almacenado en un arreglo y llega como json ¿No es así?
+````
+
+## P068 — Eficiencia / formatos y modos de ejecución
+
+- Registro UTC: 2026-10-18T22:09:24.974Z.
+- Herramienta/modelo: Codex / `gpt-6.1-sol` (metadatos de ejecución).
+- Resultado: Se compararon bytes y procesamiento de binario frente a JSON y se explicaron las pausas del modo secuencial y la continuidad del paralelo.
+- Uso: Análisis técnico; sin benchmark universal de velocidad ni cambios por esta consulta.
+- Integridad: texto original sin correcciones; se conservan erratas, denominaciones y repeticiones.
+
+Texto original:
+
+````text
+La idea de enviar en binario y en json es que uno sea más rápido y requiera menos almacenamiento que el otro ¿Es realmente así? Además ¿Cuándo el envío es más rápido cuando usamos la forma secuencial o la forma paralela?
+````
+
+## P069 — Persistencia / CSV y binario
+
+- Registro UTC: 2026-10-18T22:12:16.376Z.
+- Herramienta/modelo: Codex / `gpt-6.1-sol` (metadatos de ejecución).
+- Resultado: Se aclaró que CSV es texto y que conservar registros binarios evita convertir todas las muestras a texto.
+- Uso: Explicación que orientó la modificación posterior; no se adoptó CSV.
+- Integridad: texto original sin correcciones; se conservan erratas, denominaciones y repeticiones.
+
+Texto original:
+
+````text
+¿Y si yo quisiera que el tiempo de procesamiento fuera menor efectivamente debería guardar los mensajes en binario en otro tipo de archivo como un csv por ejemplo?
+````
+
+## P070 — Servidor Raspberry / almacenamiento binario
+
+- Registro UTC: 2026-10-18T22:13:38.439Z.
+- Herramienta/modelo: Codex / `gpt-6.1-sol` (metadatos de ejecución).
+- Resultado: Se preparó el almacenamiento .bin para DATA binario, manteniendo la variante JSON, la lectura de ambos formatos y las confirmaciones posteriores al guardado.
+- Uso: Código ajustado e integrado localmente; comprobaciones y despliegue continuados en P071 y P072. Sin respuesta final independiente antes de la siguiente consulta.
+- Integridad: texto original sin correcciones; se conservan erratas, denominaciones y repeticiones.
+
+Texto original:
+
+````text
+Entonces, quiero modificar el envío para que se guarde en binario y se más eficiente
+````
+
+## P071 — Despliegue / ubicación del cambio
+
+- Registro UTC: 2026-10-18T22:15:13.030Z.
+- Herramienta/modelo: Codex / `gpt-6.1-sol` (metadatos de ejecución).
+- Resultado: Se aclaró que la persistencia se modifica en el servidor de la Raspberry, sin requerir flashear la ESP; se informó de 19 pruebas locales satisfactorias.
+- Uso: Código preparado y comprobado localmente; el despliegue remoto se autorizó en P072.
+- Integridad: texto original sin correcciones; se conservan erratas, denominaciones y repeticiones.
+
+Texto original:
+
+````text
+¿Debo ese cambio hacerlo en la raspi o dónde?
+````
+
+## P072 — SSH / despliegue y manual técnico
+
+- Registro UTC: 2026-10-20T19:10:43.764Z.
+- Herramienta/modelo: Codex / `gpt-6.1-sol` (metadatos de ejecución).
+- Resultado: Se instaló el guardado .bin por SSH en la Raspberry; se informaron 12 pruebas remotas satisfactorias. Se eliminó el documento de instrucciones y se actualizó y copió el manual técnico.
+- Uso: Cambios ajustados e integrados en el receptor local y remoto y en la documentación. No se afirma que binario aporte cifrado.
+- Integridad: texto original sin correcciones; se conservan erratas, denominaciones y repeticiones.
+
+Texto original:
+
+````text
+Ya estoy conectado a la raspi, conéctate por ssh y haz el cambio, además elimina el documento con las instrucciones y actualiza el manual técnico
+````
+
+## P073 — Documentación / guion audiovisual y Wireshark
+
+- Registro UTC: 2026-10-21T14:58:33.285Z.
+- Herramienta/modelo: Codex / `gpt-6.1-sol` (metadatos de ejecución).
+- Resultado: Se entregó un prompt para un video explicativo y una guía de captura e interpretación de Wireshark basada en la Tarea 1 de TIC3 disponible.
+- Uso: Texto propuesto para una herramienta de video; no se generó ni se verificó un video final.
+- Integridad: texto original sin correcciones; se conservan erratas, denominaciones y repeticiones.
+
+Texto original:
+
+````text
+Dame un prompt para un video hehco por IA en base a todos los documentos de la tarea 3 donde me explique todo el funcionamiento del proceso, decisiones tomadsa, que cosas son eficientes, seguras, etc. algo como el manual técnico pero en video y luego dame el paso a paso de lo que debería hacer con wireshark, que debería ver y demás
+````
+
+## P074 — Captura de red / tcpdump en Raspberry
+
+- Registro UTC: 2026-10-21T15:14:34.896Z.
+- Herramienta/modelo: Codex / `gpt-6.1-sol` (metadatos de ejecución).
+- Resultado: Se instaló tcpdump en la Raspberry y se comprobó captura en wlan0; se explicó cómo copiar y analizar el PCAP desde el PC.
+- Uso: Herramienta instalada y comprobada; instrucciones ajustadas a la captura en el extremo receptor.
+- Integridad: texto original sin correcciones; se conservan erratas, denominaciones y repeticiones.
+
+Texto original:
+
+````text
+En la raspi no me funciona el comando tcpdump ¿Estando con el wifi común (no de la raspi) puedo analizar con wireshark desde el pc? ¿Si no como lo hago desde la raspi?
+````
+
+## P075 — Red / puertos y punto de captura
+
+- Registro UTC: 2026-10-21T15:25:36.586Z.
+- Herramienta/modelo: Codex / `gpt-6.1-sol` (metadatos de ejecución).
+- Resultado: Se explicaron los puertos de datos 5001 y control 5000, la captura sobre una interfaz y la visibilidad limitada del tráfico ajeno en una red WiFi.
+- Uso: Respuesta explicativa y guía de análisis; sin cambios de firmware.
+- Integridad: texto original sin correcciones; se conservan erratas, denominaciones y repeticiones.
+
+Texto original:
+
+````text
+Explícame que hacen y que son los puertos 5000 y 5001, además explícame que debería observar yo en wireshark en cada prueba. ¿Se debería ver diferente si lo hiciera usando el AP de la raspi? ¿Por qué la captura solo se puede medir en la raspi y no en el pc si en teoría están en la misma red, no debería poder verse el tráfico igual? ¿Es esto porque yo no capturo en la red si no que capturo en un puerto de la raspi?
+````
+
+## P076 — Wireshark / Data y ACK TCP
+
+- Registro UTC: 2026-10-21T18:42:52.428Z.
+- Herramienta/modelo: Codex / `gpt-6.1-sol` (metadatos de ejecución).
+- Resultado: Se interpretaron las cuatro imágenes adjuntas: payload Data, PSH/ACK frente a ACK sin payload, puerto 5001 y control 5000 mal interpretado como RSL.
+- Uso: Análisis de imágenes; no se alteraron las capturas originales.
+- Integridad: texto original sin correcciones; se conservan erratas, denominaciones y repeticiones.
+- Adjuntos de la solicitud (no forman parte del prompt): `codex-clipboard-bd295d92-74a3-493c-9692-af09ebd99ca3.png` — `/tmp/codex-clipboard-bd295d92-74a3-493c-9692-af09ebd99ca3.png`; `codex-clipboard-12b490c8-dc34-4658-9bac-c85d6cefc1a5.png` — `/tmp/codex-clipboard-12b490c8-dc34-4658-9bac-c85d6cefc1a5.png`; `codex-clipboard-512dfa94-3716-476f-b0ce-f6e64dcc3c3e.png` — `/tmp/codex-clipboard-512dfa94-3716-476f-b0ce-f6e64dcc3c3e.png`; `codex-clipboard-fba77b37-b053-425c-9630-a4cf325505b1.png` — `/tmp/codex-clipboard-fba77b37-b053-425c-9630-a4cf325505b1.png`.
+
+Texto original:
+
+````text
+Acá por ejemplo, el mensaje en binario es lo que dice data? ¿Qué son los paquetes que dicen [ PSH, ACK] y cual es la diferencia con los que dicen [ACK]? En la parte del puerto 5001 veo los paquetes de envío de datos en binario ¿Qué veo en la parte del puerto 5000 entonces y qué signigica cada paquete?
+
+<image name=[Image #1] path="/tmp/codex-clipboard-bd295d92-74a3-493c-9692-af09ebd99ca3.png">
+</image>
+<image name=[Image #2] path="/tmp/codex-clipboard-12b490c8-dc34-4658-9bac-c85d6cefc1a5.png">
+</image>
+<image name=[Image #3] path="/tmp/codex-clipboard-512dfa94-3716-476f-b0ce-f6e64dcc3c3e.png">
+</image>
+<image name=[Image #4] path="/tmp/codex-clipboard-fba77b37-b053-425c-9630-a4cf325505b1.png">
+</image>
+````
+
+## P077 — Wireshark / pruebas sobre el AP
+
+- Registro UTC: 2026-10-21T18:56:56.811Z.
+- Herramienta/modelo: Codex / `gpt-6.1-sol` (metadatos de ejecución).
+- Resultado: Se recomendó usar el AP para demostrar la topología exigida y comparar TCP/UDP; se entregaron pasos de captura y evidencias a tomar.
+- Uso: Guía de pruebas; no equivale a mediciones ejecutadas por este prompt.
+- Integridad: texto original sin correcciones; se conservan erratas, denominaciones y repeticiones.
+
+Texto original:
+
+````text
+¿Para mi proyecto según lo que me pide la tarea 3 será mejor analizar paquetes usando el AP de la raspi? Si es así, dame los pasos exactos a seguir para hacer todo, que screenshots debo tomar y demás
+````
+
+## P078 — Wireshark / revisión de screenshot 02
+
+- Registro UTC: 2026-10-21T20:03:07.258Z.
+- Herramienta/modelo: Codex / `gpt-6.1-sol` (metadatos de ejecución).
+- Resultado: Se aclaró que la imagen es evidencia de handshake y datos TCP sobre el AP, mientras que el screenshot 02 previsto era la conexión del PC al AP.
+- Uso: Revisión de la imagen adjunta; sin cambios en el código.
+- Integridad: texto original sin correcciones; se conservan erratas, denominaciones y repeticiones.
+- Adjuntos de la solicitud (no forman parte del prompt): `codex-clipboard-d0094383-7edd-4f9e-adf5-6f72ce3e86a5.png` — `/tmp/codex-clipboard-d0094383-7edd-4f9e-adf5-6f72ce3e86a5.png`.
+
+Texto original:
+
+````text
+¿Está bien esta imagen? para el screenshot 02 ¿Puedes explicarme más detallada y simplemente lo que debo tomar pantallazo? ¿Debería sacar el mismo screenshot para cada prueba o como?
+
+<image name=[Image #1] path="/tmp/codex-clipboard-d0094383-7edd-4f9e-adf5-6f72ce3e86a5.png">
+</image>
+````
+
+## P079 — Wireshark / evidencias de otras pruebas
+
+- Registro UTC: 2026-10-21T20:12:39.460Z.
+- Herramienta/modelo: Codex / `gpt-6.1-sol` (metadatos de ejecución).
+- Resultado: Se describieron capturas y condiciones comunes para las pruebas TCP/UDP, binario/JSON y secuencial/paralelo.
+- Uso: Instrucciones de documentación de pruebas; posteriormente se acotó la comparación requerida a TCP/UDP en P082.
+- Integridad: texto original sin correcciones; se conservan erratas, denominaciones y repeticiones.
+
+Texto original:
+
+````text
+¿Y el resto de screenshots para las otras pruebas? Dame las instrucciones para ellos también
+````
+
+## P080 — Wireshark / instrucciones de pantallazos
+
+- Registro UTC: 2026-10-21T20:18:49.549Z.
+- Herramienta/modelo: Codex / `gpt-6.1-sol` (metadatos de ejecución).
+- Resultado: Se concretaron filtros, columnas, Data, handshake, ACK y estadísticas de los PCAP para obtener pantallazos.
+- Uso: Guía operativa; sin modificación de los archivos de adquisición.
+- Integridad: texto original sin correcciones; se conservan erratas, denominaciones y repeticiones.
+
+Texto original:
+
+````text
+Dame solo las instrucciones para los pantallazos en wireshark
+````
+
+## P081 — Wireshark / revisión de la carpeta de imágenes
+
+- Registro UTC: 2026-10-21T20:37:20.303Z.
+- Herramienta/modelo: Codex / `gpt-6.1-sol` (metadatos de ejecución).
+- Resultado: Se revisaron las imágenes disponibles entonces y se señalaron evidencias útiles, ajustes y límites de interpretación, incluidos RSL y selección de dirección de flujo.
+- Uso: Revisión de evidencias; las imágenes originales se conservaron. El inventario final de P088 identifica 15 pantallazos específicamente de Wireshark.
+- Integridad: texto original sin correcciones; se conservan erratas, denominaciones y repeticiones.
+
+Texto original:
+
+````text
+Analiza y dime si están correctos para mi informe mis pantallazos tomados contenidos en /home/diego/Pictures/Screenshots
+````
+
+## P082 — Wireshark / comparación final TCP frente a UDP
+
+- Registro UTC: 2026-10-21T20:41:58.361Z.
+- Herramienta/modelo: Codex / `gpt-6.1-sol` (metadatos de ejecución).
+- Resultado: Se acotó la comparación principal a T01 TCP y T02 UDP con los demás parámetros constantes, y se propusieron seis pantallazos.
+- Uso: Guía ajustada al requisito del enunciado; T03–T05 quedaron como pruebas complementarias.
+- Integridad: texto original sin correcciones; se conservan erratas, denominaciones y repeticiones.
+
+Texto original:
+
+````text
+Lo que dice el enunciado es que con iwreshark debo diferenciar el tcp y udp solamente, por ende dame el detalle final para comparar entre ambos modos usando wireshark
+````
+
+## P083 — Informe / arquitectura diseño y resultados
+
+- Registro UTC: 2026-10-21T20:53:36.199Z.
+- Herramienta/modelo: Codex / `gpt-6.1-sol` (metadatos de ejecución).
+- Resultado: Se creó el informe DOCX editable y PDF de seis páginas, con portada de referencia, arquitectura, resultados reales, comparación TCP/UDP y efecto de tasa y rango del BMI270.
+- Uso: Documento ajustado con los datos de portada de P084; métricas calculadas sobre sesiones y PCAP. Se mantienen límites experimentales y no se fabricaron mediciones.
+- Integridad: texto original sin correcciones; se conservan erratas, denominaciones y repeticiones.
+- Adjuntos de la solicitud (no forman parte del prompt): `portada_tareas.zip` — `/home/diego/Downloads/portada_tareas.zip`.
+
+Texto original:
+
+````text
+Ahora tal como lo solicita en los entregables, haz esto:
+Informe corto (máx. 5-6 páginas) que explique arquitectura, decisiones de diseño y resultados,
+incluyendo una comparación del efecto de distintas combinaciones de frecuencia de muestreo y
+rango/sensibilidad del BMI270 sobre los datos adquiridos. Puedes considerar esta portada para el informe, modifica respectivamente según el ramo profesor, y demás (déjame para modificar yo la portada de todas maneras)
+````
+
+## P084 — Informe / datos de portada
+
+- Registro UTC: 2026-10-21T20:56:01.476Z.
+- Herramienta/modelo: Codex / `gpt-6.1-sol` (metadatos de ejecución).
+- Resultado: Se incorporaron Diego Sanhueza Chávez, Vicente Vásquez Garrido y el profesor Luciano Radriagán; asignatura Taller de Integración TIC (TIC3), sin sección.
+- Uso: Aclaración incorporada a la portada editable del informe; sin código independiente.
+- Integridad: texto original sin correcciones; se conservan erratas, denominaciones y repeticiones.
+
+Contexto de la pregunta (no forma parte de la respuesta):
+
+Para completar la portada, ¿cuáles son los nombres de los dos integrantes, el nombre completo del profesor y la sección? Usaré «Taller de Integración TIC (TIC3)» y dejaré campos editables donde falten datos.
+
+Texto original:
+
+````text
+Diego Sanhueza Chávez, Vicente Vásquez Garrido, el profesor es Luciano Radriagán, no hay sección
+````
+
+## P085 — Informe / GUI servidor configuración y prioridades WiFi
+
+- Registro UTC: 2026-10-21T21:23:23.055Z.
+- Herramienta/modelo: Codex / `gpt-6.1-sol` (metadatos de ejecución).
+- Resultado: Se ampliaron GUI, servidor, confirmación CONFIG_OK, selección WiFi por prioridades, reconexión, memoria, transporte y persistencia.
+- Uso: Revisión documental integrada en DOCX y PDF, conservando seis páginas y portada editable.
+- Integridad: texto original sin correcciones; se conservan erratas, denominaciones y repeticiones.
+
+Texto original:
+
+````text
+Necesito que expliques también el funcionamiento de la GUI, servidor, cambio de parámetros desde la GUI, decisiones que se tomaron como por ejemplo, el wifi por prioridades y otras.
+````
+
+## P086 — Informe / revisión de la evidencia TCP
+
+- Registro UTC: 2026-10-21T21:49:48.039Z.
+- Herramienta/modelo: Codex / `gpt-6.1-sol` (metadatos de ejecución).
+- Resultado: Se reconoció que el handshake no muestra por sí solo las muestras y que era necesario agregar la captura Data de T01.
+- Uso: Aclaración editorial; la imagen se incorporó en P087.
+- Integridad: texto original sin correcciones; se conservan erratas, denominaciones y repeticiones.
+
+Texto original:
+
+````text
+¿Por qué no incluyes la imagen donde se ve la data en T01 e incluyes solo la del handshake?
+````
+
+## P087 — Informe / incorporación de Data de T01
+
+- Registro UTC: 2026-10-21T21:53:09.677Z.
+- Herramienta/modelo: Codex / `gpt-6.1-sol` (metadatos de ejecución).
+- Resultado: Se agregó como Figura 2 de la página 5 el paquete 160 con Data desplegado, Len=1440 y contenido hexadecimal; se mantuvo el handshake.
+- Uso: Cambios integrados en DOCX y PDF, con seis páginas y revisión visual.
+- Integridad: texto original sin correcciones; se conservan erratas, denominaciones y repeticiones.
+
+Texto original:
+
+````text
+Entonces incluye esa parte de data del T01
+````
+
+## P088 — Informe y anexo / interpretación detallada de Wireshark
+
+- Registro UTC: 2026-10-21T22:11:18.386Z.
+- Herramienta/modelo: Codex / `gpt-6.1-sol` (metadatos de ejecución).
+- Resultado: Se amplió la lectura de TCP/UDP, Seq/Ack, PSH, tamaños, control 5000, RSL y la dirección del flujo T05. Se creó un anexo de 17 páginas con los 15 pantallazos originales de Wireshark y una comparación final de T01–T05.
+- Uso: Documentos ajustados y entregados como DOCX y PDF. Se comprobaron las seis páginas del informe, las 17 del anexo y la inclusión de las 15 imágenes originales sin cambios.
+- Integridad: texto original sin correcciones; se conservan erratas, denominaciones y repeticiones.
+
+Texto original:
+
+````text
+Agrega más explicación y descripción sobre lo que se observa en wireshark en el informe entre las diferencias entre udp y tcp. Haz aparte de ese un documento con todas las capturas de wireshark hechas y las descripciones de cada una.
+````
+
+## P089 — Entrega / actualización del registro de prompts
+
+- Registro UTC: 2026-10-21T22:23:46.211Z.
+- Herramienta/modelo: Codex / `gpt-6.1-sol` (metadatos de ejecución).
+- Resultado: Se extendió el registro consolidado desde P059 hasta P089 usando mensajes originales, fechas UTC y modelo de los metadatos del historial local; se identificaron las copias antiguas como históricas.
+- Uso: Registro actualizado; sin cambios de firmware o servidor. Este prompt se incluye para mantener la trazabilidad de la propia documentación.
+- Integridad: texto original sin correcciones; se conservan erratas, denominaciones y repeticiones.
+
+Texto original:
+
+````text
+Actualiza además el registro de prompts usados para el desarrollo de la tarea
+````
