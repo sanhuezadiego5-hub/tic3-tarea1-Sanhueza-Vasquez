@@ -1,4 +1,4 @@
-# Capturas y comparación TCP frente a UDP
+# Evidencias de red y comparación TCP frente a UDP
 
 Las cinco capturas del AP de la Raspberry, realizadas el 21 de octubre de 2026,
 están en [ap/](ap/). Los 15 pantallazos originales están en [capturas/](capturas/).
