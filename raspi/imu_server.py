@@ -1,7 +1,6 @@
 """Receiver for TIC3 IMU v1: TCP/UDP, durable blocks, idempotent ACK."""
 import argparse
 from datetime import datetime, timezone
-import hashlib
 import json
 import logging
 import math
@@ -15,6 +14,7 @@ import time
 from imu_control import CaptureControl
 from imu_settings import decode_config, encode_config
 from imu_protocol import Reassembler, TCPFrames, decode_packet, encode_control, tcp_frame
+from imu_storage import encode_block, fingerprint, load_block
 
 LOG = logging.getLogger("imu_server")
 
@@ -31,11 +31,15 @@ class BlockStore:
 
     @staticmethod
     def atomic_json(path, value):
+        BlockStore.atomic_bytes(path, json.dumps(value, separators=(",", ":"), allow_nan=False).encode())
+
+    @staticmethod
+    def atomic_bytes(path, value):
         temporary = None
         try:
-            with tempfile.NamedTemporaryFile("w", dir=path.parent, delete=False, encoding="utf-8") as file:
+            with tempfile.NamedTemporaryFile("wb", dir=path.parent, delete=False) as file:
                 temporary = file.name
-                json.dump(value, file, separators=(",", ":"), allow_nan=False)
+                file.write(value)
                 file.flush()
                 os.fsync(file.fileno())
             os.replace(temporary, path)
@@ -51,21 +55,21 @@ class BlockStore:
 
     def save(self, block, transport, encoding):
         stream = "acceleration" if block["stream"] == 0 else "angular_velocity"
-        stable = {key: value for key, value in block.items()
-                  if key not in ("duplicate", "fragment_count", "version", "type")}
-        digest = hashlib.sha256(json.dumps(stable, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+        digest = fingerprint(block)
         base = self.folder / f'{block["device_id"]:016x}_{block["boot_id"]:016x}' / stream
         with self.lock:
             base.mkdir(parents=True, exist_ok=True)
-            path = base / f'window-{block["window_seq"]:010d}.json'
-            if path.exists():
-                previous = json.loads(path.read_text())
-                if previous.get("sha256") != digest:
-                    raise ValueError("conflicting replay of saved block")
-                self.duplicates += 1
-                self.update_status()
-                return path, False
-            data = dict(block)
+            stem = base / f'window-{block["window_seq"]:010d}'
+            path = stem.with_suffix('.bin' if encoding == 'binary' else '.json')
+            for existing in (stem.with_suffix('.bin'), stem.with_suffix('.json')):
+                if existing.exists():
+                    previous = load_block(existing)
+                    if fingerprint(previous) != digest:
+                        raise ValueError("conflicting replay of saved block")
+                    self.duplicates += 1
+                    self.update_status()
+                    return existing, False
+            data = {k: v for k, v in block.items() if k != '_raw_records'}
             data.update(sha256=digest, transport=transport, encoding=encoding,
                         mode="sequential" if block["flags"] & 8 else "parallel", timestamp_kind="fifo_host_read",
                         received_utc=datetime.now(timezone.utc).isoformat(), stream_name=stream,
@@ -77,7 +81,10 @@ class BlockStore:
                 data['configuration']=json.loads(manifest.read_text()).get('configuration')
             duration = (block["window_end_us"] - block["window_start_us"]) / 1e6
             data["captured_samples_per_second"] = block["sample_count"] / duration if duration > 0 else None
-            self.atomic_json(path, data)
+            if encoding == 'binary':
+                self.atomic_bytes(path, encode_block(dict(data, _raw_records=block.get('_raw_records'))))
+            else:
+                self.atomic_json(path, data)
             self.blocks += 1
             self.samples[stream] += block["sample_count"]
             self.update_status()
@@ -161,7 +168,7 @@ class IMUServer:
             threading.Thread(target=self.tcp_client, args=(conn, addr, role), daemon=True).start()
 
     def tcp_client(self, conn, addr, role):
-        assembler, frames = Reassembler(timeout=2), TCPFrames()
+        assembler, frames = Reassembler(timeout=2, keep_raw=True), TCPFrames()
         identity = None
         connected = last_data = time.monotonic()
         try:
@@ -228,7 +235,7 @@ class IMUServer:
 
     def udp_loop(self, sock, role):
         del role
-        assembler = Reassembler(timeout=2, max_pending=16)
+        assembler = Reassembler(timeout=2, max_pending=16, keep_raw=True)
         while not self.stop.is_set():
             self.store.expire(assembler)
             try:

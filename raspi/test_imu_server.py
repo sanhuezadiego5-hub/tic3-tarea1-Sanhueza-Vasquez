@@ -8,6 +8,7 @@ import unittest
 
 from imu_protocol import TCPFrames, decode_packet, encode_control, tcp_frame
 from imu_server import IMUServer
+from imu_storage import load_block
 
 
 def free_port():
@@ -82,8 +83,9 @@ class IMUServerTests(unittest.TestCase):
                             client.sendall(tcp_frame(frame))
                         ack, _ = decode_packet(read_frame(client))
                         self.assertEqual((ack["type"], ack["window_seq"], ack["stream"]), (3, 0, 0))
-                self.assertEqual(len(list(Path(folder).rglob("window-*.json"))), 1)
-                saved = json.loads(next(Path(folder).rglob("window-*.json")).read_text())
+                self.assertEqual(len(list(Path(folder).rglob("window-*.bin"))), 1)
+                self.assertEqual(len(list(Path(folder).rglob("window-*.json"))), 0)
+                saved = load_block(next(Path(folder).rglob("window-*.bin")))
                 self.assertEqual(saved["sample_count"], 400)
                 self.assertEqual(saved["value_count"], 1200)
             finally:
@@ -98,7 +100,8 @@ class IMUServerTests(unittest.TestCase):
                     for frame in groups[1]:
                         client.sendall(tcp_frame(frame))
                     self.assertEqual(decode_packet(read_frame(client))[0]["type"], 3)
-                self.assertEqual(len(list(Path(folder).rglob("window-*.json"))), 1)
+                self.assertEqual(len(list(Path(folder).rglob("window-*.bin"))), 1)
+                self.assertEqual(len(list(Path(folder).rglob("window-*.json"))), 0)
             finally:
                 server.close()
 

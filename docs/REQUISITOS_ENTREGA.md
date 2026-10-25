@@ -1,23 +1,23 @@
 # Requisitos y estado de entrega
 
-Revisión: 13 de octubre de 2026. Fuente: código y sesiones del repositorio.
+Revisión documental: 25 de octubre de 2026. Fuente: código, sesiones y capturas del repositorio.
 Este archivo es documentación de entrega; no sustituye el informe corto.
 
 | Requisito | Implementación / evidencia | Estado |
 |---|---|---|
-| Comparación TCP/UDP observable | Puerto datos 5001 TCP/UDP, control TCP 5000 | Implementado; captura/análisis Wireshark a cargo del grupo |
+| Comparación TCP/UDP observable | Puerto datos 5001 TCP/UDP, control TCP 5000 | Implementado; capturas T01–T05 y análisis incluidos |
 | Capas modulares y comentadas | Sensor `bmi270_sensor`, adquisición `imu_acquisition`, red `imu_wifi`/`imu_transport`, GUI Python/HTML/Tkinter | Implementado |
 | GUI para usuario sin programación | Lanzador Tkinter + acceso de escritorio + GUI web local sin Internet | Implementado; requiere instalar Tkinter una vez |
 | Cliente desconectado sin caer servidor | Hilo por conexión, límites de clientes, cierre de cliente sin cerrar listeners | Prueba de EOF/RST/mensaje inválido y reconexión incluida |
 | Tiempo/configuración en datos | `read_us`, `received_utc`, `mode`, `sample_hz`, `range`, `scale_to_si`, `configuration` | Verificado en los 44 bloques incluidos |
-| Nombre con apellidos | Renombrado en GitHub y ajuste de remote | Lo hará el usuario |
+| Nombre con apellidos | `tic3-tarea1-Sanhueza-Vasquez` y remoto origin configurado | Verificado |
 | Firmware secuencial/paralelo | Selección remota, core 1 adquisición, core 0 envío paralelo | Implementado y compilado; nuevo reparto de archivos no flasheado aún |
 | Servidor + GUI Raspberry | Carpeta `raspi/` | Incluido |
 | `sensores/` con >=3 sesiones variadas | Cinco sesiones, distintos Hz, rangos y objetivos; manifiestos en `sessions/` | Incluido; cantidades coherentes con bloques |
 | README instalación/ejecución | README raíz y documentación por módulo | Actualizado |
-| `prompts.md` raíz con etapa/texto/modelo/resultado/uso | 58 prompts y aclaraciones del historial original; modelos de metadatos | Incluido, salvo una credencial omitida explícitamente |
-| Capturas Wireshark y análisis | Carpeta `wireshark/` con instrucciones | Pendiente del grupo |
-| Informe <=5–6 páginas | Carpeta `informe/` con alcance | Pendiente del grupo |
+| `prompts.md` raíz con etapa/texto/modelo/resultado/uso | 92 prompts y aclaraciones del historial original; modelos de metadatos | Incluido, salvo una credencial omitida explícitamente |
+| Capturas Wireshark y análisis | Cinco PCAP en `wireshark/ap/`, 15 pantallazos y anexo descrito | Incluido |
+| Informe <=5–6 páginas | Informe DOCX/PDF de seis páginas, incluida portada editable | Incluido |
 
 ## Contratos de las capas
 

@@ -82,11 +82,11 @@ Añadir `--activate` desde una terminal local de la Raspberry o con acceso alter
 - TCP confirma el guardado mediante ACK y permite reintentos y deduplicación. UDP no confirma ni retransmite los datos. Los buffers son finitos y los descartes se contabilizan.
 - La GUI muestra valores SI y previsualización; los archivos guardan las muestras completas recibidas. El timestamp del sensor representa la lectura de FIFO, no el instante físico exacto de conversión.
 
-Detalles en [manual de GUI y control](raspi/GUI_CONTROL_AP.md), [protocolo](docs/PROTOCOLO_DATOS.md) y [diseño](docs/DISENO_ESP32_TAREA1.md). Los reportes de pruebas de hardware están en `raspi/*verified.json` y `raspi/runtime_hardware_check.json`; corresponden a sesiones distintas de los datos de ejemplo.
+Detalles en [manual de GUI y control](raspi/GUI_CONTROL_AP.md), [protocolo](docs/PROTOCOLO_DATOS.md) y [diseño](docs/DISENO_ESP32_TAREA1.md). El [informe corto y el anexo](informe/README.md) incluyen resultados de adquisición y comparación TCP/UDP: informe de seis páginas con portada editable y anexo con las 15 capturas descritas. Los [manuales de apoyo](docs/manuales/README.md) explican comandos y funcionamiento técnico. Los reportes de pruebas de hardware están en `raspi/*verified.json` y `raspi/runtime_hardware_check.json`; corresponden a sesiones distintas de los datos de ejemplo.
 
 ## Entrega y arquitectura
 
-La correspondencia entre requisitos, código, datos y evidencias está en [docs/REQUISITOS_ENTREGA.md](docs/REQUISITOS_ENTREGA.md). El registro consolidado de IA está en [prompts.md](prompts.md). Las sesiones incluidas y sus parámetros están en [sensores/README.md](sensores/README.md). Wireshark y el informe corto quedan a cargo del grupo.
+La correspondencia entre requisitos, código, datos y evidencias está en [docs/REQUISITOS_ENTREGA.md](docs/REQUISITOS_ENTREGA.md). El registro consolidado de IA está en [prompts.md](prompts.md). Las sesiones incluidas y sus parámetros están en [sensores/README.md](sensores/README.md). Las capturas del AP se conservan en `wireshark/ap/`; el informe y su análisis reproducible están en `informe/`.
 
 - `esp/main/main.c`: punto de entrada.
 - `bmi270_sensor.c/.h`: capa de sensor (I2C, imagen Bosch, registros, configuración y lectura de retorno). No depende de WiFi ni sockets.
@@ -108,6 +108,10 @@ El script usa un compilador C (`cc`) y Python 3, genera fixtures temporales y co
 
 ## Archivos generados y privados
 
-Los directorios `build*`, el bootloader generado, CMakeFiles, cachés, `sdkconfig`, contraseñas, claves SSH y nuevas capturas no forman parte del repositorio. ESP-IDF vuelve a generar los archivos de compilación a partir de CMake y del código fuente. Se incluyen los archivos necesarios para reproducir el proyecto, no los binarios que contienen la configuración privada de la instalación.
+Los directorios `build*`, el bootloader generado, CMakeFiles, cachés, `sdkconfig`, contraseñas, claves SSH y capturas de adquisición nuevas fuera de las sesiones seleccionadas no forman parte del repositorio. Las evidencias PCAP y pantallazos seleccionados sí se versionan en `wireshark/`. ESP-IDF vuelve a generar los archivos de compilación a partir de CMake y del código fuente. Se incluyen los archivos necesarios para reproducir el proyecto, no los binarios que contienen la configuración privada de la instalación.
 
-Las direcciones `192.0.2.x`, el usuario `usuario` y las rutas `/ruta/...` son ejemplos para documentación; reemplazarlos por los valores locales. La configuración real del AP está definida en `raspi/setup_ap.py`. El historial publicado omite identificadores de red y rutas personales.
+Las direcciones `192.0.2.x`, el usuario `usuario` y las rutas `/ruta/...` son ejemplos para documentación; reemplazarlos por los valores locales. La configuración real del AP está definida en `raspi/setup_ap.py`. No se publican claves ni archivos privados de configuración; las evidencias seleccionadas conservan direcciones IP locales y los documentos pueden citar rutas de la instalación original.
+
+## Almacenamiento de capturas
+
+Los bloques recibidos en modo binario se guardan en `.bin`, conservando las muestras como registros binarios. El modo JSON mantiene archivos `.json`.

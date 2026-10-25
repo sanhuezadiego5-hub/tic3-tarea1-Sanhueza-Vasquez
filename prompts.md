@@ -1447,3 +1447,49 @@ Texto original:
 ````text
 Actualiza además el registro de prompts usados para el desarrollo de la tarea
 ````
+
+## Actualización del 25 de octubre de 2026
+
+Se incorporan las consultas sobre publicación con Git y la solicitud de actualizar GitHub. Textos y fechas proceden del historial local; los metadatos de modelo se conservan cuando están disponibles.
+
+## P090 — Git / publicación de prompts
+
+- Registro UTC: 2026-10-24T23:46:17.112Z.
+- Herramienta/modelo: Codex / `gpt-6.1-sol`.
+- Resultado: Se entregaron los comandos para revisar, preparar, confirmar y subir prompts.md al remoto.
+- Uso: Instrucciones; no se ejecutaron commits ni push por esta consulta.
+- Integridad: texto original sin correcciones.
+
+Texto original:
+
+````text
+Recuérdame como era el proceso para pushear los prompts a mi repositorio
+````
+
+## P091 — Git / explicación de comandos
+
+- Registro UTC: 2026-10-24T23:50:12.679Z.
+- Herramienta/modelo: Codex / `gpt-6.1-sol`.
+- Resultado: Se explicó cd, diff, add, commit, push y la asociación de rama, incluido el riesgo de incorporar archivos ya preparados.
+- Uso: Respuesta explicativa; sin cambios de código.
+- Integridad: texto original sin correcciones.
+
+Texto original:
+
+````text
+Explícame que hace cada comando
+````
+
+## P092 — GitHub / publicación de la entrega completa
+
+- Registro UTC: 2026-10-25T21:59:11.574Z.
+- Herramienta/modelo: Codex / `gpt-6.1-sol`.
+- Resultado: Se reunieron informe, anexo, PCAP, pantallazos, manuales y almacenamiento binario; se actualizó la documentación de entrega y el registro de prompts.
+- Uso: Cambios preparados, verificados y destinados al commit de publicación de esta solicitud; el resultado del push se informa al usuario al finalizar.
+- Integridad: texto original sin correcciones.
+
+Texto original:
+
+````text
+Necesito que actualices en el repositorio de github todas los elementos nuevos hechos, como el informe, los prompts y la parte de wireshark (Y si algo más se me olvida también)
+````

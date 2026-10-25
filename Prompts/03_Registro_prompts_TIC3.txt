@@ -1,3 +1,9 @@
+AVISO DE ACTUALIZACIÓN — 25-10-2026
+Este archivo se conserva como recopilación histórica editada.
+El registro consolidado actualizado, con originales P001–P092 y notas de resultado,
+está en ../prompts.md (raíz del repositorio tarea1-tic3).
+No sustituir los originales por las versiones editadas de esta recopilación.
+
 REGISTRO DE PROMPTS DE LA TAREA 1 DE TIC 3
 
 Recopilación preparada el 12 de octubre de 2026.

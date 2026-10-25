@@ -46,7 +46,8 @@ def main():
             time.sleep(.5) # Allow late UDP packets before inspecting durable files.
             session=peer()['session'];root=Path(get()['storage'])
             base=root/(finished['device']+'_'+finished['boot'])
-            blocks=[json.loads(f.read_text()) for f in base.rglob('window-*.json')]
+            from imu_storage import load_block
+            blocks=[load_block(f) for pattern in ('window-*.json', 'window-*.bin') for f in base.rglob(pattern)]
             blocks=[b for b in blocks if b.get('session_id')==session['id']]
             counts={name:sum(b['sample_count'] for b in blocks if b['stream_name']==name) for name in ['acceleration','angular_velocity']}
             assert all(b['mode']==config['mode'] and b['transport']==config['transport'] and b['encoding']==config['format'] for b in blocks)

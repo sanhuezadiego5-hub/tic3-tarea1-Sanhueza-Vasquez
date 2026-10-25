@@ -1,0 +1,122 @@
+[
+  {
+    "file": "Screenshot From 2026-10-21 15-40-04.png",
+    "title": "Datos binarios por TCP en la red común",
+    "context": "Captura preliminar en la red 192.168.1.x; ESP 192.168.1.56 y Raspberry 192.168.1.131. No corresponde al AP 192.168.50.x usado en T01 y T02.",
+    "observed": "Está seleccionado el paquete 557, de la ESP al puerto 5001, con [PSH, ACK], Seq=43715 y Len=1440. La trama mide 1494 bytes. El árbol inferior muestra Data (1440 bytes) y el panel derecho presenta los bytes en hexadecimal y su representación ASCII.",
+    "meaning": "Los 1440 bytes son contenido del flujo TCP. La diferencia 1494 − 1440 = 54 corresponde a las cabeceras Ethernet, IPv4 y TCP presentes. El comienzo 54 49 43 33 representa TIC3 en ASCII. Los puntos del panel ASCII sustituyen bytes no imprimibles; no indican cifrado. El paquete puede contener una parte de un mensaje o más de uno.",
+    "limit": "La imagen demuestra transporte de payload binario hacia el receptor; no demuestra por sí sola que un arreglo completo haya sido guardado. Tampoco es evidencia de la topología AP."
+  },
+  {
+    "file": "Screenshot From 2026-10-21 15-40-43.png",
+    "title": "ACK TCP sin contenido de aplicación",
+    "context": "Mismo intercambio preliminar de la red común, ahora con un reconocimiento del receptor seleccionado.",
+    "observed": "El paquete 556 va de Raspberry 192.168.1.131:5001 a ESP 192.168.1.56:54859. Indica [ACK], Seq=801, Ack=43715 y Len=0; su trama mide 54 bytes y no aparece un bloque Data.",
+    "meaning": "La Raspberry reconoce el flujo recibido y anuncia 43715 como siguiente número de byte esperado. Len=0 significa ausencia de payload TCP en este segmento, aunque el paquete sí contiene cabeceras. Un ACK puede reconocer varios segmentos, por lo que no se espera una relación uno a uno entre paquetes de datos y ACK.",
+    "limit": "Este ACK lo produce TCP. No es el ACK TIC3 que confirma persistencia en disco, ni representa una nueva muestra del BMI270."
+  },
+  {
+    "file": "Screenshot From 2026-10-21 15-41-43.png",
+    "title": "Canal 5000 interpretado como RSL",
+    "context": "Red común; tráfico de control entre la ESP y la Raspberry, separado del canal de muestras 5001.",
+    "observed": "El paquete 576 de 186 bytes aparece como RSL [Malformed Packet]. El árbol conserva la capa Transmission Control Protocol, puerto origen 54858, y añade IPA protocol ip.access, type: RSL. En el hexadecimal se reconoce la firma TIC3.",
+    "meaning": "Wireshark está intentando interpretar el protocolo propio como IPA/RSL en el puerto 5000. Esa interpretación no coincide con los mensajes TIC3 de estado, control y preview definidos en el proyecto. Los paquetes de 186/154 bytes son compatibles con mensajes de aplicación y sus cabeceras TCP; la etiqueta RSL no cambia el transporte real.",
+    "limit": "Malformed Packet en ese disector no prueba una falla del BMI270 ni corrupción de las muestras. Para leerlo como datos, usar Analyze → Enabled Protocols y deshabilitar IPA/ip.access/RSL, o revisar Decode As. Conservar esta imagen como evidencia de la interpretación original, no como prueba de pérdida."
+  },
+  {
+    "file": "Screenshot From 2026-10-21 15-41-50.png",
+    "title": "Reconocimiento TCP del canal de control",
+    "context": "Vista complementaria de la misma comunicación del puerto 5000 en la red común.",
+    "observed": "Está seleccionado el paquete 574, ESP → Raspberry:5000, [ACK], Seq=25213, Ack=19197, Len=0 y longitud de trama 54. Alrededor se ven mensajes que el disector llama RSL.",
+    "meaning": "El reconocimiento confirma bytes recibidos desde el servidor en la conexión de control. La presencia de tráfico en ambos sentidos es coherente con órdenes, respuestas y estado. La selección permite distinguir un ACK de transporte sin payload de los mensajes que sí tienen contenido.",
+    "limit": "La bandera ACK no identifica START, STOP ni CONFIG. Para distinguir esas órdenes hay que reensamblar el flujo y decodificar el tipo de mensaje TIC3. La advertencia RSL de las filas vecinas debe interpretarse con la corrección descrita en la captura anterior."
+  },
+  {
+    "file": "Screenshot From 2026-10-21 16-58-40.png",
+    "title": "Establecimiento y datos TCP sobre el AP",
+    "context": "Topología del AP: ESP 192.168.50.103 y Raspberry 192.168.50.1. Vista general del intercambio utilizado también en T01.",
+    "observed": "Se observan FIN/ACK 149 y ACK 150 de una conexión anterior, SYN 151, SYN/ACK 152 y ACK 153 de una conexión nueva. Está seleccionado el paquete 160, ESP:50200 → Raspberry:5001, [PSH, ACK], Len=1440. Abajo aparecen Protocol: TCP (6), Data (1440 bytes) y los bytes del contenido.",
+    "meaning": "El handshake precede al envío de aplicación. El puerto efímero de origen cambia de 50199 a 50200 para la conexión nueva. El payload comienza con la firma TIC3, visible como 54 49 43 33. La columna Length de 1494 incluye cabeceras y difiere de Len=1440, que cuenta solo contenido TCP.",
+    "limit": "FIN/ACK no significa pérdida de datos por sí mismo: cierra una conexión. Una imagen del paquete 160 no representa necesariamente un arreglo completo; TCP divide un flujo de bytes en segmentos."
+  },
+  {
+    "file": "Screenshot From 2026-10-21 17-35-12.png",
+    "title": "T05 con Follow TCP Stream en sentido servidor a ESP",
+    "context": "El título identifica T05_tcp_json_paralelo.pcap. Se abrió Follow TCP Stream para tcp.stream eq 2.",
+    "observed": "La opción inferior selecciona 192.168.50.1:5001 → 192.168.50.103:50204, con 6100 bytes. La vista está en ASCII y repite TIC3 junto con puntos. Detrás está seleccionado el paquete 4695, de 154 bytes de trama y Data de 100 bytes, enviado por la Raspberry.",
+    "meaning": "Se muestran respuestas del servidor, no las muestras JSON que envía la ESP. El protocolo mantiene confirmaciones TIC3 binarias incluso cuando DATA usa JSON. Los 100 bytes son compatibles con cuatro de prefijo de longitud TCP más 96 de mensaje de control. Follow reconstruye el flujo y puede mostrar ASCII o Hex Dump; sus puntos representan bytes no imprimibles [R2].",
+    "limit": "Esta captura no demuestra que DATA de T05 sea binario ni que JSON haya fallado. Para inspeccionar el JSON, seleccionar el sentido ESP → Raspberry y buscar los objetos de muestras. El análisis del PCAP sí reconstruyó DATA JSON. Los colores dependen del tema; conviene leer la dirección indicada."
+  },
+  {
+    "file": "T01/Screenshot From 2026-10-21 17-09-11.png",
+    "title": "T01 con handshake TCP de tres pasos",
+    "context": "T01: TCP, binario y paralelo sobre el AP. El recorte original contiene exclusivamente las tres filas de establecimiento.",
+    "observed": "151: ESP 192.168.50.103:50200 → Raspberry 192.168.50.1:5001, SYN, Seq=0, Len=0, MSS=1440. 152: respuesta SYN/ACK, Seq=0, Ack=1 y MSS=1460. 153: ACK de la ESP, Seq=1, Ack=1, Len=0.",
+    "meaning": "SYN inicia y sincroniza la conexión; SYN/ACK acepta y reconoce el SYN; el ACK final completa el establecimiento. Aunque no llevan muestras, los SYN consumen un número de secuencia. MSS anuncia el máximo payload TCP aceptado por cada extremo, no el tamaño de un arreglo ni el de la cabecera TIC3.",
+    "limit": "Demuestra establecimiento TCP, pero no transferencia ni guardado de muestras. Se complementa con las capturas Data y ACK de T01. UDP no realiza este handshake en su canal de datos."
+  },
+  {
+    "file": "T01/Screenshot From 2026-10-21 17-11-38.png",
+    "title": "T01 con Data binario y números Seq Ack",
+    "context": "T01, conexión de datos ESP:50200 → Raspberry:5001; es la captura de payload incluida en el informe principal.",
+    "observed": "El paquete 160 indica [PSH, ACK], Seq=105, Ack=101 y Len=1440; el árbol confirma TCP payload y Data de 1440 bytes. El paquete 161 responde con Ack=1545 y Len=0. La columna hexadecimal empieza con la firma TIC3.",
+    "meaning": "El cálculo 105 + 1440 = 1545 relaciona los bytes enviados con el siguiente byte esperado por la Raspberry. Seq y Ack cuentan bytes del flujo, no muestras XYZ. PSH solicita entrega de lo recibido a la aplicación, sin fijar límites de mensaje ni asegurar escritura en disco. La bandera ACK del paquete 160 también reconoce bytes de la dirección contraria.",
+    "limit": "Se debe usar Len>0 para identificar contenido, no únicamente la bandera PSH. Data es el payload entregado al disector; el receptor TIC3 debe reensamblar y validar mensajes antes de reconstruir arreglos. Esta imagen no permite contar todas las muestras de la sesión."
+  },
+  {
+    "file": "T01/Screenshot From 2026-10-21 17-25-41.png",
+    "title": "T01 con ACK en el puerto 5000",
+    "context": "Aunque T01 usa TCP para las muestras, esta captura corresponde al canal de control TCP 5000.",
+    "observed": "El paquete 1586 mide 54 bytes y va de ESP:50198 a Raspberry:5000 con [ACK], Seq=45805, Ack=34701 y Len=0. La capa Ethernet identifica Espressif y RaspberryPi; el resto de la lista contiene RSL [Malformed Packet].",
+    "meaning": "La selección muestra reconocimiento de transporte, sin una muestra ni una orden en el payload. Las filas vecinas corresponden a la conexión de control interpretada por un disector inadecuado. El puerto 5000 sigue un intercambio bidireccional independiente del socket de datos 5001.",
+    "limit": "No usar esta imagen para demostrar el envío de arreglos del BMI270. Es útil para explicar separación de canales y distinguir ACK TCP del contenido de control. La etiqueta RSL debe corregirse en el análisis de Wireshark, no en los datos del sensor."
+  },
+  {
+    "file": "T01/Screenshot From 2026-10-21 17-26-31.png",
+    "title": "T01 con ACK del receptor en el puerto 5001",
+    "context": "Conexión TCP de datos del AP, ahora observada desde la respuesta de la Raspberry.",
+    "observed": "El paquete 1374 va de Raspberry:5001 a ESP:50200. Tiene Seq=5201, Ack=320069, Len=0, Flags 0x010 (ACK), Window=65535 y longitud de trama de 54 bytes. No aparece Data.",
+    "meaning": "Ack=320069 indica el siguiente byte esperado del flujo de la ESP. Window anuncia capacidad de recepción TCP y no es la ventana temporal interval_ms del sensor. Un ACK con Len=0 no aumenta el número de bytes de aplicación de ese sentido, de ahí que Seq pueda repetirse entre reconocimientos.",
+    "limit": "Conversation completeness: Incomplete, DATA es un resumen de la conversación observado por Wireshark, no un indicador de arreglo TIC3 incompleto. Para conocer integridad de una ventana deben revisarse fragmentos, conteos y persistencia. Este ACK no equivale a la confirmación TIC3 de guardado."
+  },
+  {
+    "file": "T01/Screenshot From 2026-10-21 17-45-11.png",
+    "title": "T01 en la tabla Conversations TCP",
+    "context": "Statistics → Conversations, pestaña TCP, para el archivo T01_tcp_binario_paralelo.pcap.",
+    "observed": "Aparecen dos conversaciones hacia 192.168.50.1:5001: origen 50199 con 2 paquetes y 108 bytes, y origen 50200 con 732 paquetes y aproximadamente 418 kB. La conversación principal muestra 460 paquetes A → B.",
+    "meaning": "Los 2 + 732 = 734 paquetes coinciden con el conteo del canal TCP 5001 del informe. La conexión breve corresponde al intercambio de cierre visible en la captura general; la principal contiene establecimiento, datos y confirmaciones en ambos sentidos. 418 kB es un valor redondeado de la interfaz; el cálculo exacto sobre ambas conversaciones suma 417744 bytes de tramas.",
+    "limit": "Packets no cuenta solo mensajes DATA: incluye ACK y otros segmentos. Tampoco equivale al número de muestras ni de arreglos. No comparar 418 kB redondeados con medidas precisas sin indicar el criterio de conteo; control 5000 y HTTP quedan fuera de esta comparación."
+  },
+  {
+    "file": "T02/Screenshot From 2026-10-21 17-28-36.png",
+    "title": "T02 con datagrama UDP y payload binario",
+    "context": "Filtro udp.port == 5001 en T02: UDP, binario y paralelo sobre el AP.",
+    "observed": "El paquete 862 va de ESP:61373 a Raspberry:5001 y mide 1230 bytes. La lista indica Len=1188; el árbol UDP muestra Length=1196 y UDP payload/Data de 1188 bytes. Se ven varios datagramas de ese tamaño y uno más corto de Len=208.",
+    "meaning": "1196 = 1188 + 8 bytes de cabecera UDP. Con Ethernet e IPv4, 1230 = 1188 + 8 + 20 + 14 en esta captura. El fragmento completo de 1188 bytes puede contener 96 de cabecera TIC3 y 78 registros de 14 bytes. La parte final del bloque puede necesitar un datagrama menor. No hay handshake ni números Seq/Ack TCP en este canal.",
+    "limit": "UDP conserva límites de datagrama, pero un arreglo puede necesitar varios. La ausencia de ACK no demuestra pérdida: UDP no lo incorpora y el proyecto no añade ACK a DATA UDP. La integridad se comprueba por índices, conteos y CRC TIC3, no por la mera presencia de algunos paquetes."
+  },
+  {
+    "file": "T02/Screenshot From 2026-10-21 17-30-05.png",
+    "title": "T02 con mensaje de aplicación en TCP 5000",
+    "context": "Filtro tcp.port == 5000 && tcp.len > 0 durante la prueba de datos UDP.",
+    "observed": "El paquete 891, ESP:50201 → Raspberry:5000, muestra [PSH, ACK], Seq=305, Ack=301 y Len=96. El contenido empieza 54 49 43 33 01 01 ff 00, correspondiente a la firma TIC3, versión 1 y tipo HELLO según el protocolo del proyecto. Otras filas aparecen como RSL.",
+    "meaning": "El filtro excluye los ACK TCP sin payload: lo seleccionado sí contiene un mensaje de aplicación de 96 bytes. HELLO identifica la conexión del dispositivo; no contiene muestras XYZ. El canal de control puede abrir conexiones auxiliares y mantiene estado y órdenes mediante TCP aunque el canal 5001 use UDP.",
+    "limit": "Esta presencia de TCP no invalida T02. Para comprobar el transporte de las muestras debe filtrarse el puerto 5001. Los 96 bytes por sí solos no identifican una orden; la clasificación HELLO se apoya en el campo type del encabezado visible y su definición en imu_wire.h."
+  },
+  {
+    "file": "T02/Screenshot From 2026-10-21 17-46-06.png",
+    "title": "T02 en la tabla Conversations UDP",
+    "context": "Statistics → Conversations, pestaña UDP, en T02_udp_binario_paralelo.pcap.",
+    "observed": "Se ve una conversación ESP 192.168.50.103:61373 → Raspberry 192.168.50.1:5001 con 356 paquetes, aproximadamente 385 kB y 356 paquetes A → B. No aparece tráfico de respuesta de esa conversación UDP.",
+    "meaning": "La aplicación envía DATA UDP hacia el receptor sin ACK UDP de regreso. El cálculo exacto del PCAP es 385128 bytes de tramas. Frente a los 417744 bytes TCP de T01, representa 7,8 % menos para estas ejecuciones con las mismas 12000/12000 XYZ reconstruidas. El costo TCP incluye sus confirmaciones y establecimiento.",
+    "limit": "La tabla de conversaciones no demuestra entrega de cada muestra ni una velocidad universalmente mayor. El control TCP 5000 no aparece en esta pestaña. Los datagramas pueden agruparse como conversación sin que UDP establezca una conexión mediante handshake."
+  },
+  {
+    "file": "T02/Screenshot From 2026-10-21 17-49-22.png",
+    "title": "T02 con tráfico de control bidireccional",
+    "context": "Vista amplia del filtro tcp.port == 5000 en T02_udp_binario_paralelo.pcap.",
+    "observed": "La lista alterna ESP 192.168.50.103 y Raspberry 192.168.50.1. Se ven ACK de 54 bytes y mensajes clasificados como RSL de 186 o 154 bytes. El árbol inferior conserva Transmission Control Protocol, puerto origen 50198 y destino 5000; también aparece la firma TIC3 en los bytes.",
+    "meaning": "La comunicación de órdenes y estado continúa mientras las muestras viajan por UDP 5001. La advertencia RSL procede de intentar analizar el protocolo propio como otro servicio. Los 6306 paquetes mostrados de 6664 (94,6 %) se refieren al filtro y a todo el archivo, incluidas esperas de control, no al volumen de muestras UDP.",
+    "limit": "El estado de la lista puede permanecer desplazado respecto del paquete seleccionado; por eso debe leerse también el árbol de detalles. Esta captura no sirve para afirmar que el canal de muestras usa TCP. Para demostrar UDP, contrastarla con udp.port == 5001 y la captura del datagrama 862."
+  }
+]

@@ -170,7 +170,7 @@ class Reassembler:
     The 128-key completed cache only detects recent in-process replays. An ACK
     must be issued by the server AFTER idempotently saving a complete result.
     """
-    def __init__(self, timeout=2.0, max_pending=16, completed_cache=128):
+    def __init__(self, timeout=2.0, max_pending=16, completed_cache=128, keep_raw=False):
         if timeout <= 0 or max_pending < 1 or completed_cache < 1:
             raise ValueError("invalid reassembly limits")
         self.timeout = timeout
@@ -178,6 +178,7 @@ class Reassembler:
         self.completed_cache = completed_cache
         self.pending = {}
         self.completed = OrderedDict()
+        self.keep_raw = keep_raw
 
     def expire(self, now=None):
         now = time.monotonic() if now is None else now
@@ -233,4 +234,6 @@ class Reassembler:
             "values": [value for row in rows for value in row[2:]],
             "value_count": 3 * len(rows),
         })
+        if self.keep_raw:
+            result['_raw_records'] = raw
         return result
