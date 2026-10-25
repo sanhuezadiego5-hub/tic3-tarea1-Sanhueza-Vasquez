@@ -1,4 +1,4 @@
-# Sesiones de prueba incluidas
+# Datos adquiridos en cinco sesiones de prueba
 
 Cinco sesiones reales, 44 bloques JSON, aceleración y giro en carpetas separadas.
 Los manifiestos en `sessions/` vinculan configuración, bloques y cantidades.
