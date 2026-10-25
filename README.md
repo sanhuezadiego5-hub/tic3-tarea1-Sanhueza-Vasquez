@@ -2,18 +2,17 @@
 
 Adquisición con ESP32-S3 y BMI270, envío por WiFi y almacenamiento y visualización en Raspberry Pi. La GUI funciona en la red local, sin conexión a Internet.
 
-## Organización
+## Entregables
 
-| Carpeta | Contenido |
+| Ruta | Contenido solicitado |
 |---|---|
-| `esp/` | Proyecto ESP-IDF: firmware C, CMake, Kconfig, pruebas y configuración de VS Code y Dev Container. |
-| `raspi/` | Servidor Python, GUI web, control remoto, configuración del AP, pruebas y reportes de verificación. |
-| `docs/` | Diseño, protocolo, decisiones WiFi y registro de desarrollo. |
-| `sensores/` | Capturas reales y manifiestos de sesiones conservados como ejemplos. |
-| `referencias/` | Enunciado, material ESP-IDF y demo original del BMI270. |
-| `ejemplos_tcp/` | Cliente y servidor TCP iniciales; el sistema actual utiliza `raspi/imu_server.py`. |
-
-Esta carpeta es una copia organizada del proyecto que se probó. Las notas históricas conservan rutas de la instalación original y algunas decisiones anteriores; este README describe cómo ejecutar esta distribución.
+| `esp/` | Firmware ESP32-S3, modos secuencial y paralelo; archivos CMake, Kconfig y valores iniciales necesarios para compilar. |
+| `raspi/` | Código del servidor, GUI, protocolo, almacenamiento y preparación del AP. |
+| `scripts/instalar_acceso_gui.sh` | Instalación del acceso gráfico para ejecutar la GUI. |
+| `sensores/` | Cinco sesiones reales con distintas frecuencias, rangos y cantidades; su README describe los parámetros. |
+| `prompts.md` | Registro consolidado de prompts, herramienta/modelo y resultados. |
+| `wireshark/` | Cinco PCAP, pantallazos y breve comparación TCP/UDP en su README. |
+| `informe/` | Informe corto de seis páginas en PDF y versión Word con portada editable. |
 
 ## Instalación y operación gráfica
 
@@ -58,7 +57,7 @@ idf.py -B build-tic3 build
 idf.py -B build-tic3 -p /dev/ttyACM0 flash monitor
 ```
 
-Ajustar el puerto a la placa conectada. En **TIC3 - WiFi por prioridad**, habilitar los perfiles deseados y configurar SSID, contraseña, dirección del servidor y puerto 5001. Habilitar WiFi y envío a Raspberry en sus menús. Las credenciales se introducen localmente y quedan en `sdkconfig`, que no se publica. `sdkconfig.defaults` contiene valores iniciales sin contraseñas. El helper `esp/configurar_wifi_local.py` es específico del antiguo perfil Mesh 3; para otras redes utilizar `menuconfig`.
+Ajustar el puerto a la placa conectada. En **TIC3 - WiFi por prioridad**, habilitar los perfiles deseados y configurar SSID, contraseña, dirección del servidor y puerto 5001. Habilitar WiFi y envío a Raspberry en sus menús. Las credenciales se introducen localmente y quedan en `sdkconfig`, que no se publica. `sdkconfig.defaults` contiene valores iniciales sin contraseñas.
 
 La ESP ejecuta firmware después del flasheo; no se ejecuta `main.c` como un programa del PC. Espera la orden de inicio de la GUI. Salir del monitor con `Ctrl+]` no detiene la placa.
 
@@ -82,11 +81,9 @@ Añadir `--activate` desde una terminal local de la Raspberry o con acceso alter
 - TCP confirma el guardado mediante ACK y permite reintentos y deduplicación. UDP no confirma ni retransmite los datos. Los buffers son finitos y los descartes se contabilizan.
 - La GUI muestra valores SI y previsualización; los archivos guardan las muestras completas recibidas. El timestamp del sensor representa la lectura de FIFO, no el instante físico exacto de conversión.
 
-Detalles en [manual de GUI y control](raspi/GUI_CONTROL_AP.md), [protocolo](docs/PROTOCOLO_DATOS.md) y [diseño](docs/DISENO_ESP32_TAREA1.md). El [informe corto y el anexo](informe/README.md) incluyen resultados de adquisición y comparación TCP/UDP: informe de seis páginas con portada editable y anexo con las 15 capturas descritas. Los [manuales de apoyo](docs/manuales/README.md) explican comandos y funcionamiento técnico. Los reportes de pruebas de hardware están en `raspi/*verified.json` y `raspi/runtime_hardware_check.json`; corresponden a sesiones distintas de los datos de ejemplo.
+## Organización del código
 
-## Entrega y arquitectura
-
-La correspondencia entre requisitos, código, datos y evidencias está en [docs/REQUISITOS_ENTREGA.md](docs/REQUISITOS_ENTREGA.md). El registro consolidado de IA está en [prompts.md](prompts.md). Las sesiones incluidas y sus parámetros están en [sensores/README.md](sensores/README.md). Las capturas del AP se conservan en `wireshark/ap/`; el informe y su análisis reproducible están en `informe/`.
+El [informe corto](informe/Informe_Tarea1_TIC3.pdf) explica arquitectura, decisiones y resultados. La [comparación de Wireshark](wireshark/README.md) relaciona las capturas con el protocolo observado. Los [datos de sensores](sensores/README.md) describen las cinco sesiones incluidas.
 
 - `esp/main/main.c`: punto de entrada.
 - `bmi270_sensor.c/.h`: capa de sensor (I2C, imagen Bosch, registros, configuración y lectura de retorno). No depende de WiFi ni sockets.
@@ -97,14 +94,6 @@ La correspondencia entre requisitos, código, datos y evidencias está en [docs/
 - `raspi/imu_server.py`, `imu_protocol.py`: recepción y guardado.
 - `raspi/imu_control.py`, `imu_settings.py`: órdenes y validación.
 - `raspi/imu_gui.py`, `imu_gui.html`, `launcher.py`: interfaz web y lanzador gráfico.
-
-## Verificar sin hardware
-
-```bash
-bash scripts/verificar.sh
-```
-
-El script usa un compilador C (`cc`) y Python 3, genera fixtures temporales y comprueba interoperabilidad C→Python y sockets locales. Las pruebas de hardware requieren placa, sensor y Raspberry disponibles.
 
 ## Archivos generados y privados
 

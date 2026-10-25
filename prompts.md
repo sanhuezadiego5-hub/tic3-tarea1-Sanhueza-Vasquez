@@ -1493,3 +1493,31 @@ Texto original:
 ````text
 Necesito que actualices en el repositorio de github todas los elementos nuevos hechos, como el informe, los prompts y la parte de wireshark (Y si algo más se me olvida también)
 ````
+
+## P093 — Entrega / descripciones Wireshark
+
+- Registro UTC: 2026-10-25T22:06:14.481Z.
+- Herramienta/modelo: Codex / `gpt-6.1-sol`.
+- Resultado: Se indicó dónde estaban las descripciones de las capturas: README de Wireshark, informe y anexo independiente.
+- Uso: Respuesta explicativa del estado anterior a la depuración P094.
+- Integridad: texto original sin correcciones.
+
+Texto original:
+
+````text
+¿En la parte de wireshark incluiste lo que pedpia de las breves descripciones?
+````
+
+## P094 — Entrega / depuración de archivos
+
+- Registro UTC: 2026-10-25T22:37:48.345Z.
+- Herramienta/modelo: Codex / `gpt-6.1-sol`.
+- Resultado: Se revisó la sección de entregables del enunciado y se retiraron materiales adicionales. Se conservaron firmware, servidor y GUI con sus archivos necesarios de construcción/instalación, sesiones, README, prompts, capturas con breve análisis e informe corto.
+- Uso: Limpieza de la entrega y actualización de enlaces y descripciones. Los archivos anteriores se conservan en el historial Git y en una copia local fuera del repositorio; las notas históricas de prompts no se reescriben.
+- Integridad: texto original sin correcciones.
+
+Texto original:
+
+````text
+Elimina todos los archivos y carpetas del repositorio que no son solicitados como entregables de forma explícita en la tarea
+````
