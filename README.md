@@ -6,13 +6,13 @@ Adquisición con ESP32-S3 y BMI270, envío por WiFi y almacenamiento y visualiza
 
 | Ruta | Contenido solicitado |
 |---|---|
-| `esp/` | Firmware ESP32-S3, modos secuencial y paralelo; archivos CMake, Kconfig y valores iniciales necesarios para compilar. |
-| `raspi/` | Código del servidor, GUI, protocolo, almacenamiento y preparación del AP. |
+| [esp/](esp/README.md) | Firmware ESP32-S3, modos secuencial y paralelo; archivos CMake, Kconfig y valores iniciales necesarios para compilar. |
+| [raspi/](raspi/README.md) | Código del servidor, GUI, protocolo, almacenamiento y preparación del AP. |
 | `scripts/instalar_acceso_gui.sh` | Instalación del acceso gráfico para ejecutar la GUI. |
-| `sensores/` | Cinco sesiones reales con distintas frecuencias, rangos y cantidades; su README describe los parámetros. |
+| [sensores/](sensores/README.md) | Cinco sesiones reales con distintas frecuencias, rangos y cantidades; su README describe los parámetros. |
 | `prompts.md` | Registro consolidado de prompts, herramienta/modelo y resultados. |
-| `wireshark/` | Cinco PCAP, pantallazos y breve comparación TCP/UDP en su README. |
-| `informe/` | Informe corto de seis páginas en PDF y versión Word con portada editable. |
+| [wireshark/](wireshark/README.md) | Cinco PCAP, pantallazos y breve comparación TCP/UDP en su README. |
+| [informe/](informe/README.md) | Informe corto de seis páginas en PDF y versión Word con portada editable. |
 
 ## Instalación y operación gráfica
 

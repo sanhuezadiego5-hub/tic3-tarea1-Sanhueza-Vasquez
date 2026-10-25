@@ -1521,3 +1521,17 @@ Texto original:
 ````text
 Elimina todos los archivos y carpetas del repositorio que no son solicitados como entregables de forma explícita en la tarea
 ````
+
+## P095 — Repositorio / descripciones de carpetas
+
+- Registro UTC: 2026-10-25T22:46:49.752Z.
+- Herramienta/modelo: Codex / `gpt-6.1-sol`.
+- Resultado: Se describió el contenido de las carpetas en sus README y se prepararon commits separados con mensajes descriptivos para la vista de GitHub.
+- Uso: Actualización de documentación y mensajes de commit; sin cambios en el funcionamiento del sistema.
+- Integridad: texto original sin correcciones.
+
+Texto original:
+
+````text
+Está bien, solo cámbiale el mensaje del commit o descripción que tiene cada carpeta por algo más descriptivo de que es cada cosa
+````
